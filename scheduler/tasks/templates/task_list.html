@@ -1,0 +1,181 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container mt-4">
+  <!-- 달력 섹션 -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{{ current_month }}</h4>
+      <div>
+        <a href="?{{ prev_month }}" class="btn btn-outline-primary btn-sm"
+          >이전 달</a
+        >
+        <a href="?{{ next_month }}" class="btn btn-outline-primary btn-sm"
+          >다음 달</a
+        >
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="calendar">
+        <div class="calendar-header">
+          <div class="day-header">일</div>
+          <div class="day-header">월</div>
+          <div class="day-header">화</div>
+          <div class="day-header">수</div>
+          <div class="day-header">목</div>
+          <div class="day-header">금</div>
+          <div class="day-header">토</div>
+        </div>
+
+        {% for week in calendar %}
+        <div class="calendar-week">
+          {% for day in week %}
+          <div
+            class="calendar-day {% if not day.is_current_month %}other-month{% endif %}"
+          >
+            <div class="day-number">{{ day.date.day }}</div>
+            <div class="day-sections">
+              <!-- 오전 섹션 -->
+              <div class="time-section am-section">
+                <div class="section-header">오전</div>
+                <div class="section-content">
+                  {% for task in day.tasks %} 
+                  {% if "오전" in task.work_time %}
+                  <div class="task-item">
+                    <small>
+                      <a class="calendar-task-link" href="{% url 'task_detail' task.pk %}">{{ task.work_time|slice:"3:" }}시: {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}</a>
+                    </small>
+                  </div>
+                  {% endif %} 
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- 오후 섹션 -->
+              <div class="time-section pm-section">
+                <div class="section-header">오후</div>
+                <div class="section-content">
+                  {% for task in day.tasks %} 
+                  {% if "오후" in task.work_time %}
+                  <div class="task-item">
+                    <small>
+                      <a class="calendar-task-link" href="{% url 'task_detail' task.pk %}">{{ task.work_time|slice:"3:" }}시: {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}</a>
+                    </small>
+                  </div>
+                  {% endif %} 
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 작업 목록 섹션 -->
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mb-0">작업 목록</h4>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>작업 요청</th>
+            <th>담당자</th>
+            <th>작업 날짜</th>
+            <th>작업 시간</th>
+            <th>설명</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks %}
+          <tr>
+            <td>
+              {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+            </td>
+            <td>{{ task.manager.username }}</td>
+            <td>{{ task.work_date |date:"Y-m-d" }}</td>
+            <td>{{ task.work_time }}</td>
+            <td>{{ task.description }}</td>
+            <td>
+              <a
+                href="{% url 'task_update' task.pk %}"
+                class="btn btn-sm btn-primary"
+                >수정</a
+              >
+              <a
+                href="{% url 'task_delete' task.pk %}"
+                class="btn btn-sm btn-danger"
+                >삭제</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <a href="{% url 'task_create' %}" class="btn btn-primary">새 작업 추가</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .calendar {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .day-header {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .calendar-week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    min-height: 120px;
+  }
+
+  .calendar-day {
+    border: 1px solid #ddd;
+    padding: 5px;
+    position: relative;
+  }
+
+  .other-month {
+    background-color: #f8f9fa;
+    color: #6c757d;
+  }
+
+  .day-number {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .day-tasks {
+    font-size: 0.8rem;
+  }
+
+  .task-item {
+    margin-bottom: 2px;
+    padding: 2px;
+    background-color: #e9ecef;
+    border-radius: 2px;
+  }
+
+  .calendar-task-link {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
+{% endblock %}

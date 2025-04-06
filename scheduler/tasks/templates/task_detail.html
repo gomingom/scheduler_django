@@ -1,0 +1,139 @@
+{% extends "base.html" %} {% block content %}
+<div class="admin-detail-container">
+  <h1>작업 상세 정보</h1>
+
+  <div class="detail-section">
+    <div class="detail-row">
+      <div class="detail-label">작업 요청:</div>
+      <div class="detail-value">
+        {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <div class="detail-label">작업 내용:</div>
+      <div class="detail-value">{{ task.description }}</div>
+    </div>
+
+    <div class="detail-row">
+      <div class="detail-label">담당자:</div>
+      <div class="detail-value">{{ task.manager.username }}</div>
+    </div>
+
+    <div class="detail-row">
+      <div class="detail-label">작업 일자:</div>
+      <div class="detail-value">{{ task.work_date|date:"Y-m-d" }}</div>
+    </div>
+
+    <div class="detail-row">
+      <div class="detail-label">작업 시간:</div>
+      <div class="detail-value">{{ task.work_time|time:"H:i" }}</div>
+    </div>
+
+    <div class="detail-row">
+      <div class="detail-label">생성일:</div>
+      <div class="detail-value">{{ task.created_at|date:"Y-m-d H:i" }}</div>
+    </div>
+
+    <div class="detail-row">
+      <div class="detail-label">수정일:</div>
+      <div class="detail-value">{{ task.updated_at|date:"Y-m-d H:i" }}</div>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <a href="{% url 'task_update' task.pk %}" class="admin-button">수정</a>
+    <a href="{% url 'task_delete' task.pk %}" class="admin-button delete-button"
+      >삭제</a
+    >
+    <a href="{% url 'task_list' %}" class="admin-button cancel-button"
+      >목록으로</a
+    >
+  </div>
+</div>
+
+<style>
+  .admin-detail-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .admin-detail-container h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .detail-section {
+    margin-bottom: 30px;
+  }
+
+  .detail-row {
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 4px;
+  }
+
+  .detail-row:hover {
+    background: #f0f0f0;
+  }
+
+  .detail-label {
+    width: 200px;
+    padding: 8px;
+    font-weight: 500;
+    color: #666;
+  }
+
+  .detail-value {
+    flex: 1;
+    padding: 8px;
+    color: #333;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .admin-button {
+    background: #79aec8;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .admin-button:hover {
+    background: #609ab6;
+  }
+
+  .delete-button {
+    background: #ba2121;
+  }
+
+  .delete-button:hover {
+    background: #a41515;
+  }
+
+  .cancel-button {
+    background: #999;
+  }
+
+  .cancel-button:hover {
+    background: #666;
+  }
+</style>
+{% endblock %}

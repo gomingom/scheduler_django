@@ -1,0 +1,182 @@
+{% extends "base.html" %} {% block content %}
+<div class="admin-form-container">
+  <h1>작업 생성</h1>
+  <form method="post" class="admin-form">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.inquiry.id_for_label }}">작업 요청:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.inquiry }} {% if form.inquiry.errors %}
+        <div class="error-message">{{ form.inquiry.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.description.id_for_label }}">작업 내용:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.description }} {% if form.description.errors %}
+        <div class="error-message">{{ form.description.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.manager.id_for_label }}">담당자:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.manager }} {% if form.manager.errors %}
+        <div class="error-message">{{ form.manager.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.work_date.id_for_label }}">작업 일자:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.work_date }} {% if form.work_date.errors %}
+        <div class="error-message">{{ form.work_date.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.work_time.id_for_label }}">작업 시간:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.work_time }} {% if form.work_time.errors %}
+        <div class="error-message">{{ form.work_time.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label"></div>
+      <div class="form-row-content">
+        <div class="button-group">
+          <input type="submit" value="작업 생성" class="admin-button" />
+          <a href="{% url 'task_list' %}" class="admin-button cancel-button"
+            >취소</a
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  .admin-form-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .admin-form-container h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .admin-form {
+    width: 100%;
+  }
+
+  .form-row {
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 4px;
+  }
+
+  .form-row:hover {
+    background: #f0f0f0;
+  }
+
+  .form-row-label {
+    width: 200px;
+    padding: 8px;
+    font-weight: 500;
+    color: #666;
+  }
+
+  .form-row-content {
+    flex: 1;
+    padding: 8px;
+  }
+
+  .form-row-content input[type="text"],
+  .form-row-content input[type="date"],
+  .form-row-content input[type="time"],
+  .form-row-content select,
+  .form-row-content textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .form-row-content textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .form-row-content input[type="text"]:focus,
+  .form-row-content input[type="date"]:focus,
+  .form-row-content input[type="time"]:focus,
+  .form-row-content select:focus,
+  .form-row-content textarea:focus {
+    border-color: #79aec8;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(121, 174, 200, 0.2);
+  }
+
+  .error-message {
+    color: #ba2121;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .admin-button {
+    background: #79aec8;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .admin-button:hover {
+    background: #609ab6;
+  }
+
+  .cancel-button {
+    background: #999;
+  }
+
+  .cancel-button:hover {
+    background: #666;
+  }
+</style>
+{% endblock %}

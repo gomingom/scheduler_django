@@ -1,0 +1,173 @@
+{% extends "base.html" %} {% block content %}
+<div class="admin-form-container">
+  <h1>작업 요청 수정</h1>
+  <form method="post" class="admin-form">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.ship_name.id_for_label }}">호선:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.ship_name }} {% if form.ship_name.errors %}
+        <div class="error-message">{{ form.ship_name.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.block_name.id_for_label }}">블록:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.block_name }} {% if form.block_name.errors %}
+        <div class="error-message">{{ form.block_name.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.inquirer.id_for_label }}">요청자:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.inquirer }} {% if form.inquirer.errors %}
+        <div class="error-message">{{ form.inquirer.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.request_date.id_for_label }}">완료 희망일:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.request_date }} {% if form.request_date.errors %}
+        <div class="error-message">{{ form.request_date.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.status.id_for_label }}">상태:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.status }} {% if form.status.errors %}
+        <div class="error-message">{{ form.status.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label"></div>
+      <div class="form-row-content">
+        <div class="button-group">
+          <input type="submit" value="수정" class="admin-button" />
+          <a href="{% url 'inquiry_list' %}" class="admin-button cancel-button"
+            >취소</a
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  .admin-form-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .admin-form-container h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .admin-form {
+    width: 100%;
+  }
+
+  .form-row {
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 4px;
+  }
+
+  .form-row:hover {
+    background: #f0f0f0;
+  }
+
+  .form-row-label {
+    width: 200px;
+    padding: 8px;
+    font-weight: 500;
+    color: #666;
+  }
+
+  .form-row-content {
+    flex: 1;
+    padding: 8px;
+  }
+
+  .form-row-content input[type="text"],
+  .form-row-content input[type="date"],
+  .form-row-content select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .form-row-content input[type="text"]:focus,
+  .form-row-content input[type="date"]:focus,
+  .form-row-content select:focus {
+    border-color: #79aec8;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(121, 174, 200, 0.2);
+  }
+
+  .error-message {
+    color: #ba2121;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .admin-button {
+    background: #79aec8;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .admin-button:hover {
+    background: #609ab6;
+  }
+
+  .cancel-button {
+    background: #999;
+  }
+
+  .cancel-button:hover {
+    background: #666;
+  }
+</style>
+{% endblock %}

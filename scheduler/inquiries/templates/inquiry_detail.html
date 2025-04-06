@@ -1,0 +1,7 @@
+{% extends "base.html" %} {% block content %}
+<h1>{{ inquiry.ship_name }} - {{ inquiry.block_name }}</h1>
+<p>요청자: {{ inquiry.inquirer }}</p>
+<p>희망 완료일: {{ inquiry.request_date|date:"Y-m-d" }}</p>
+<p>상태: {{ inquiry.status }}</p>
+<p>요청 내용: {{ inquiry.content }}</p>
+{% endblock %}
