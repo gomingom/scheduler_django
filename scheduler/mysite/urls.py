@@ -31,12 +31,13 @@ from tasks.views import (
     task_update,
     task_delete,
 )
-from users.views import login_user, logout_user
+from users.views import login_user, logout_user, create_user
 from home.views import home
 from django.contrib.auth.views import LogoutView, LoginView
 
 urlpatterns = [
     path("", home, name="home"),
+    path("create_user/", create_user, name="create_user"),  
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
     path("admin/", admin.site.urls),

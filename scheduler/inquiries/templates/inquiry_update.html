@@ -27,17 +27,6 @@
 
     <div class="form-row">
       <div class="form-row-label">
-        <label for="{{ form.inquirer.id_for_label }}">요청자:</label>
-      </div>
-      <div class="form-row-content">
-        {{ form.inquirer }} {% if form.inquirer.errors %}
-        <div class="error-message">{{ form.inquirer.errors }}</div>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-row-label">
         <label for="{{ form.request_date.id_for_label }}">완료 희망일:</label>
       </div>
       <div class="form-row-content">

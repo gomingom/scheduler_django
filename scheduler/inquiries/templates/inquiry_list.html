@@ -38,6 +38,7 @@
         <td>{{ inquiry.inquirer.username }}</td>
         <td>{{ inquiry.request_date|date:"Y-m-d" }}</td>
         <td>
+          {% if inquiry.inquirer == user %}
           <a
             href="{% url 'inquiry_update' inquiry.pk %}"
             class="btn btn-primary"
@@ -46,6 +47,7 @@
           <a href="{% url 'inquiry_delete' inquiry.pk %}" class="btn btn-danger"
             >삭제</a
           >
+          {% endif %}
         </td>
       </tr>
       {% endfor %}
