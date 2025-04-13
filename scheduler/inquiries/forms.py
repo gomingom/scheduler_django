@@ -6,10 +6,9 @@ from users.models import User
 class InquiryForm(forms.ModelForm):
     class Meta:
         model = Inquiry
-        fields = ["ship_name", "block_name", "request_date", "status"]
+        fields = ["ship_name", "block_name", "request_date", "device", "inquiry_detail"]
         widgets = {
             "request_date": forms.DateInput(attrs={"type": "date"}),
-            "status": forms.Select(choices=StatusChoices.choices),
         }
 
     def __init__(self, *args, **kwargs):

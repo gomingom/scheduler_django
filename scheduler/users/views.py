@@ -26,6 +26,19 @@ def create_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        User.objects.create_user(username=username, password=password)
+        password_confirm = request.POST.get('password_confirm')
+        
+        if password != password_confirm:
+            return render(request, "create_user.html", {
+                'error_message': '비밀번호가 일치하지 않습니다.',
+                'username': username,
+                'name': name,
+                'group': group,
+                'contact_number': contact_number,
+            })
+        name = request.POST.get('name')
+        group = request.POST.get('group')
+        contact_number = request.POST.get('contact_number') 
+        User.objects.create_user(username=username, password=password, name=name, group=group, contact_number=contact_number)
         return redirect('login')
     return render(request, "create_user.html")

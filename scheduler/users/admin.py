@@ -12,7 +12,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     filter_horizontal = ()
     list_per_page = 20
     fieldsets = (
-        (None, {"fields": ("username", "password")}),  
+        (None, {"fields": ("username","name", "password")}),  
         ("Permissions", {"fields": ("is_staff", "is_active", "is_superuser", "groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )

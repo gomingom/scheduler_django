@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Task
 from .forms import TaskForm
 import calendar
@@ -20,12 +20,20 @@ def filter_work_time(tasks, time_slot):
 # Create your views here.
 def task_create(request):
     if request.method == "POST":
-        form = TaskForm(request.POST)
+        form = TaskForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
             return redirect("task_list")
-    return render(request, "task_create.html", {"form": TaskForm()})
+    return render(request, "task_create.html", {"form": TaskForm(user=request.user)})
 
+
+def task_create_internal(request):
+    if request.method == "POST":
+        form = TaskForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("task_list")
+    return render(request, "task_create_internal.html", {"form": TaskForm(user=request.user)})
 
 def task_update(request, pk):
     task = Task.objects.get(pk=pk)

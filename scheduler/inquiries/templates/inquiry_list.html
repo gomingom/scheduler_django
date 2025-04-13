@@ -1,151 +1,120 @@
-{% extends "base.html" %} {% block content %}
-<div class="inquiry-table-header">
-  <a
-    href="{% url 'inquiry_create' %}"
-    id="create-inquiry"
-    class="btn btn-primary"
-    >신규 작업 요청</a
-  >
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">공지사항</h4>
+      {% if user.is_staff %}
+      <div>
+        <a href="{% url 'announcement_create' %}" id="create-notice" class="btn btn-primary">공지사항 작성</a>
+      </div>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      {% if latest_notice %}
+      <div class="latest-notice">
+        <div class="notice-header">
+          <h5 class="notice-title">{{ latest_notice.title }}</h5>
+          <div class="notice-meta">
+            <span class="notice-author">작성자: {{ latest_notice.author.username }}</span>
+            <span>|</span>
+            <span class="notice-date">작성일: {{ latest_notice.created_at|date:"Y-m-d" }}</span>
+          </div>
+        </div>
+        <div class="notice-content mt-3">
+          {{ latest_notice.content|linebreaks }}
+        </div>
+      </div>
+      {% else %}
+      <div class="text-center">
+        <p>등록된 공지사항이 없습니다.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">신규 작업 요청</h4>
+      <a href="{% url 'inquiry_create' %}" id="create-inquiry" class="btn btn-primary">신규 작업 요청</a>
+    </div>
+    <div class="card-body">
+      <div class="inquiry-table">
+        <table class="table table-striped" id="inquiryTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="ship">
+                호선 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="block">
+                블록 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="block"></thclass>
+                요청부서 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="inquiry_detail">
+                작업내용 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="device">
+                요청장비 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="inquirer">
+                요청자 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="contact_number">
+                연락처 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="request_date">
+                완료 희망일 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="measurement_date">
+                측정일 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="">
+                담당자 <span class="sort-icon">↕</span>
+              </th>
+              <th class="sortable" data-sort="status">
+                상태 <span class="sort-icon">↕</span>
+              </th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for inquiry in inquiries %}
+            <tr>
+              <td>{{ inquiry.ship_name }}</td>
+              <td>{{ inquiry.block_name }}</td>
+              <td>{{ inquiry.inquirer.group }}</td>
+              <td>{{ inquiry.inquiry_detail }}</td>
+              <td>{{ inquiry.device }}</td>
+              <td>{{ inquiry.inquirer.name }}</td>
+              <td>{{ inquiry.inquirer.contact_number }}</td>
+              <td>{{ inquiry.request_date|date:"Y-m-d" }}</td>
+              <td>{% if inquiry.task_set.first %}{{ inquiry.task_set.first.work_date|date:"Y-m-d" }}{% else %}-{% endif %}</td>
+              <td>{% if inquiry.task_set.first %}{{ inquiry.task_set.first.manager.name }}{% else %}-{% endif %}</td>
+              <td>{{ inquiry.status }}</td>
+              <td>
+                {% if inquiry.inquirer == user %}
+                <a href="{% url 'inquiry_update' inquiry.pk %}" class="btn btn-primary">수정</a>
+                <a href="{% url 'inquiry_delete' inquiry.pk %}" class="btn btn-danger">삭제</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="inquiry-table">
-  <table class="table table-striped" id="inquiryTable">
-    <thead>
-      <tr>
-        <th class="sortable" data-sort="ship">
-          호선 <span class="sort-icon">↕</span>
-        </th>
-        <th class="sortable" data-sort="block">
-          블록 <span class="sort-icon">↕</span>
-        </th>
-        <th class="sortable" data-sort="status">
-          상태 <span class="sort-icon">↕</span>
-        </th>
-        <th class="sortable" data-sort="inquirer">
-          요청자 <span class="sort-icon">↕</span>
-        </th>
-        <th class="sortable" data-sort="request_date">
-          완료 희망일 <span class="sort-icon">↕</span>
-        </th>
-        <th>비고</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for inquiry in inquiries %}
-      <tr>
-        <td>{{ inquiry.ship_name }}</td>
-        <td>{{ inquiry.block_name }}</td>
-        <td>{{ inquiry.status }}</td>
-        <td>{{ inquiry.inquirer.username }}</td>
-        <td>{{ inquiry.request_date|date:"Y-m-d" }}</td>
-        <td>
-          {% if inquiry.inquirer == user %}
-          <a
-            href="{% url 'inquiry_update' inquiry.pk %}"
-            class="btn btn-primary"
-            >수정</a
-          >
-          <a href="{% url 'inquiry_delete' inquiry.pk %}" class="btn btn-danger"
-            >삭제</a
-          >
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+{% endblock %}
 
-<style>
-  .inquiry-table-header {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 20px;
-  }
-  .sortable {
-    cursor: pointer;
-    user-select: none;
-  }
-  .sort-icon {
-    font-size: 0.8em;
-    margin-left: 5px;
-  }
-  .sort-asc .sort-icon::after {
-    content: "↑";
-  }
-  .sort-desc .sort-icon::after {
-    content: "↓";
-  }
-  #create-inquiry {
-    margin-bottom: 10px;
-    margin-left: 10px;
-    justify-content: flex-end;
-  }
-</style>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'inquiries/css/inquiry_list.css' %}">
+{% endblock %}
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const table = document.getElementById("inquiryTable");
-    const headers = table.querySelectorAll("th.sortable");
-    let currentSort = { column: null, direction: "asc" };
-
-    headers.forEach((header) => {
-      header.addEventListener("click", () => {
-        const column = header.dataset.sort;
-
-        // Remove previous sort classes
-        headers.forEach((h) => {
-          h.classList.remove("sort-asc", "sort-desc");
-        });
-
-        // Determine sort direction
-        let direction = "asc";
-        if (currentSort.column === column) {
-          direction = currentSort.direction === "asc" ? "desc" : "asc";
-        }
-
-        // Add sort class to current header
-        header.classList.add(`sort-${direction}`);
-
-        // Update current sort
-        currentSort = { column, direction };
-
-        // Sort the table
-        const tbody = table.querySelector("tbody");
-        const rows = Array.from(tbody.querySelectorAll("tr"));
-
-        rows.sort((a, b) => {
-          const aValue = a
-            .querySelector(`td:nth-child(${getColumnIndex(column)})`)
-            .textContent.trim();
-          const bValue = b
-            .querySelector(`td:nth-child(${getColumnIndex(column)})`)
-            .textContent.trim();
-
-          if (direction === "asc") {
-            return aValue.localeCompare(bValue);
-          } else {
-            return bValue.localeCompare(aValue);
-          }
-        });
-
-        // Reorder the rows
-        rows.forEach((row) => tbody.appendChild(row));
-      });
-    });
-
-    function getColumnIndex(column) {
-      switch (column) {
-        case "ship":
-          return 1;
-        case "block":
-          return 2;
-        case "status":
-          return 3;
-        default:
-          return 1;
-      }
-    }
-  });
-</script>
-
+{% block extra_js %}
+<script src="{% static 'inquiries/js/inquiry_list.js' %}"></script>
 {% endblock %}

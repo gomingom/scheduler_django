@@ -1,12 +1,14 @@
 from django import forms
 from .models import Task
-
+from users.models import User
+from inquiries.models import Inquiry
 
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ["inquiry", "description", "manager", "work_date", "work_time"]
+        fields = ["inquiry", "ship_name", "block_name", "description", "manager", "work_date", "work_time"]
         widgets = {
+            "inquiry": forms.Select(choices=Inquiry.objects.all().values_list("id", "ship_name")),
             "work_date": forms.DateInput(attrs={"type": "date"}),
             "work_time": forms.Select(
                 choices=[
@@ -38,9 +40,13 @@ class TaskForm(forms.ModelForm):
                 ]
             ),
             "description": forms.Textarea(attrs={"rows": 4}),
+            "inquiry.status": forms.Select(
+                choices=Inquiry.objects.all().values_list("status", "status"),
+            ),
         }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
@@ -52,3 +58,7 @@ class TaskForm(forms.ModelForm):
 
         # 담당자 필드의 선택 옵션을 username으로 표시
         self.fields["manager"].label_from_instance = lambda obj: obj.username
+        
+        # 현재 로그인한 사용자를 담당자 필드의 초기값으로 설정
+        if self.user and self.user.is_authenticated:
+            self.initial['manager'] = self.user

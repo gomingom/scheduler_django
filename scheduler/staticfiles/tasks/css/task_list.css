@@ -1,0 +1,55 @@
+.calendar {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.day-header {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  min-height: 120px;
+}
+
+.calendar-day {
+  border: 1px solid #ddd;
+  padding: 5px;
+  position: relative;
+}
+
+.other-month {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+
+.day-number {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.day-tasks {
+  font-size: 0.8rem;
+}
+
+.task-item {
+  margin-bottom: 2px;
+  padding: 2px;
+  background-color: #e9ecef;
+  border-radius: 2px;
+}
+
+.calendar-task-link {
+  text-decoration: none;
+  color: inherit;
+} 

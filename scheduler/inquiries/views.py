@@ -3,12 +3,14 @@ from django.http import HttpResponse, HttpResponseForbidden
 from .models import Inquiry
 from .forms import InquiryForm
 from users.models import User
-
+from announcements.models import Announcement
+from tasks.models import Task
 
 # Create your views here.
 def inquiry_list(request):
     inquiries = Inquiry.objects.all()
-    return render(request, "inquiry_list.html", {"inquiries": inquiries})
+    latest_notice = Announcement.objects.order_by('-created_at').first()
+    return render(request, "inquiry_list.html", {"inquiries": inquiries, "latest_notice": latest_notice})
 
 
 def inquiry_detail(request, pk):

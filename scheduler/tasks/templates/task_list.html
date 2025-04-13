@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
 <div class="container mt-4">
   <!-- 달력 섹션 -->
   <div class="card mb-4">
@@ -41,7 +43,22 @@
                   {% if "오전" in task.work_time %}
                   <div class="task-item">
                     <small>
-                      <a class="calendar-task-link" href="{% url 'task_detail' task.pk %}">{{ task.work_time|slice:"3:" }}시: {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}</a>
+                      <a class="calendar-task-link" 
+                         href="{% url 'task_detail' task.pk %}"
+                         data-has-inquiry="{% if task.inquiry %}true{% else %}false{% endif %}"
+                         data-inquiry-ship-name="{% if task.inquiry %}{{ task.inquiry.ship_name }}{% endif %}"
+                         data-inquiry-block-name="{% if task.inquiry %}{{ task.inquiry.block_name }}{% endif %}"
+                         data-ship-name="{% if not task.inquiry %}{{ task.ship_name }}{% endif %}"
+                         data-block-name="{% if not task.inquiry %}{{ task.block_name }}{% endif %}"
+                         data-work-time="{{ task.work_time }}"
+                         data-manager="{{ task.manager.username }}"
+                         data-description="{{ task.description }}">
+                        {% if task.inquiry %}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+                        {% else %}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.ship_name }} - {{ task.block_name }}
+                        {% endif %}
+                      </a>
                     </small>
                   </div>
                   {% endif %} 
@@ -57,7 +74,22 @@
                   {% if "오후" in task.work_time %}
                   <div class="task-item">
                     <small>
-                      <a class="calendar-task-link" href="{% url 'task_detail' task.pk %}">{{ task.work_time|slice:"3:" }}시: {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}</a>
+                      <a class="calendar-task-link" 
+                         href="{% url 'task_detail' task.pk %}"
+                         data-has-inquiry="{% if task.inquiry %}true{% else %}false{% endif %}"
+                         data-inquiry-ship-name="{% if task.inquiry %}{{ task.inquiry.ship_name }}{% endif %}"
+                         data-inquiry-block-name="{% if task.inquiry %}{{ task.inquiry.block_name }}{% endif %}"
+                         data-ship-name="{% if not task.inquiry %}{{ task.ship_name }}{% endif %}"
+                         data-block-name="{% if not task.inquiry %}{{ task.block_name }}{% endif %}"
+                         data-work-time="{{ task.work_time }}"
+                         data-manager="{{ task.manager.username }}"
+                         data-description="{{ task.description }}">
+                        {% if task.inquiry %}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+                        {% else %}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.ship_name }} - {{ task.block_name }}
+                        {% endif %}
+                      </a>
                     </small>
                   </div>
                   {% endif %} 
@@ -73,10 +105,10 @@
     </div>
   </div>
 
-  <!-- 작업 목록 섹션 -->
+  <!-- 요청 작업 목록 섹션 -->
   <div class="card">
     <div class="card-header">
-      <h4 class="mb-0">작업 목록</h4>
+      <h4 class="mb-0">요청 작업 목록</h4>
     </div>
     <div class="card-body">
       <table class="table">
@@ -87,6 +119,57 @@
             <th>작업 날짜</th>
             <th>작업 시간</th>
             <th>설명</th>
+            <th>리포트</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks %}
+          {% if task.inquiry %}
+          <tr>
+            <td>
+              {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+            </td>
+            <td>{{ task.manager.name }}</td>
+            <td>{{ task.work_date |date:"Y-m-d" }}</td>
+            <td>{{ task.work_time }}</td>
+            <td>{{ task.description }}</td>
+            <td>-</td>
+            <td>
+              <a
+                href="{% url 'task_update' task.pk %}"
+                class="btn btn-sm btn-primary"
+                >수정</a
+              >
+              <a
+                href="{% url 'task_delete' task.pk %}"
+                class="btn btn-sm btn-danger"
+                >삭제</a
+              >
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+      <a href="{% url 'task_create' %}" class="btn btn-primary">새 작업 추가</a>
+    </div>
+  </div>
+  <!-- 주요 작업 목록 섹션 -->
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mb-0">주요 작업 목록</h4>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>작업 대상</th>
+            <th>담당자</th>
+            <th>작업 날짜</th>
+            <th>작업 시간</th>
+            <th>설명</th>
+            <th>리포트</th> 
             <th>비고</th>
           </tr>
         </thead>
@@ -94,12 +177,13 @@
           {% for task in tasks %}
           <tr>
             <td>
-              {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+              {{ task.ship_name }} - {{ task.block_name }}
             </td>
-            <td>{{ task.manager.username }}</td>
+            <td>{{ task.manager.name }}</td>
             <td>{{ task.work_date |date:"Y-m-d" }}</td>
             <td>{{ task.work_time }}</td>
             <td>{{ task.description }}</td>
+            <td>-</td>
             <td>
               <a
                 href="{% url 'task_update' task.pk %}"
@@ -116,66 +200,17 @@
           {% endfor %}
         </tbody>
       </table>
-      <a href="{% url 'task_create' %}" class="btn btn-primary">새 작업 추가</a>
+      <a href="{% url 'task_create_internal' %}" class="btn btn-primary">새 작업 추가</a>
     </div>
   </div>
 </div>
 
-<style>
-  .calendar {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/task_list.css' %}">
+{% endblock %}
 
-  .calendar-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #ddd;
-  }
+{% block extra_js %}
+<script src="{% static 'tasks/js/task_hover.js' %}"></script>
+{% endblock %}
 
-  .day-header {
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
-  }
-
-  .calendar-week {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    min-height: 120px;
-  }
-
-  .calendar-day {
-    border: 1px solid #ddd;
-    padding: 5px;
-    position: relative;
-  }
-
-  .other-month {
-    background-color: #f8f9fa;
-    color: #6c757d;
-  }
-
-  .day-number {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-
-  .day-tasks {
-    font-size: 0.8rem;
-  }
-
-  .task-item {
-    margin-bottom: 2px;
-    padding: 2px;
-    background-color: #e9ecef;
-    border-radius: 2px;
-  }
-
-  .calendar-task-link {
-    text-decoration: none;
-    color: inherit;
-  }
-</style>
 {% endblock %}

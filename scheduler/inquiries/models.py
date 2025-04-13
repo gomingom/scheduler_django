@@ -9,6 +9,9 @@ class StatusChoices(models.TextChoices):
     REJECTED = "반려", "반려"
     CANCLED = "취소", "취소"
 
+class DeviceChoices(models.TextChoices):
+    DEVICE_1 = "일반측정", "일반측정"
+    DEVICE_2 = "3D Scanner", "3D Scanner"
 
 class Inquiry(models.Model):
     ship_name = models.CharField(max_length=150)
@@ -21,6 +24,8 @@ class Inquiry(models.Model):
     status = models.CharField(
         max_length=150, choices=StatusChoices.choices, default=StatusChoices.PENDING
     )
+    device = models.CharField(max_length=150, choices=DeviceChoices.choices)
+    inquiry_detail = models.TextField()
 
     def __str__(self):
         return f"{self.ship_name} - {self.block_name}"

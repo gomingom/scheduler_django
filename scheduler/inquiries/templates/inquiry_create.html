@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
 <div class="admin-form-container">
   <h1>작업 요청</h1>
   <form method="post" class="admin-form">
@@ -24,7 +27,26 @@
         {% endif %}
       </div>
     </div>
-
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.inquiry_detail.id_for_label }}">작업 내용:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.inquiry_detail }} {% if form.inquiry_detail.errors %}
+        <div class="error-message">{{ form.inquiry_detail.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.device.id_for_label }}">측정 기기:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.device }} {% if form.device.errors %}
+        <div class="error-message">{{ form.device.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
     <div class="form-row">
       <div class="form-row-label">
         <label for="{{ form.request_date.id_for_label }}">완료 희망일:</label>
@@ -37,17 +59,6 @@
     </div>
 
     <div class="form-row">
-      <div class="form-row-label">
-        <label for="{{ form.status.id_for_label }}">상태:</label>
-      </div>
-      <div class="form-row-content">
-        {{ form.status }} {% if form.status.errors %}
-        <div class="error-message">{{ form.status.errors }}</div>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="form-row">
       <div class="form-row-label"></div>
       <div class="form-row-content form-row-content-button">
         <input type="submit" value="작업 요청" class="admin-button" />
@@ -55,94 +66,8 @@
     </div>
   </form>
 </div>
+{% endblock %}
 
-<style>
-  .admin-form-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .admin-form-container h1 {
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 24px;
-    font-weight: 500;
-  }
-
-  .admin-form {
-    width: 100%;
-  }
-
-  .form-row {
-    display: flex;
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #f8f8f8;
-    border-radius: 4px;
-  }
-
-  .form-row:hover {
-    background: #f0f0f0;
-  }
-
-  .form-row-label {
-    width: 200px;
-    padding: 8px;
-    font-weight: 500;
-    color: #666;
-  }
-
-  .form-row-content {
-    flex: 1;
-    padding: 8px;
-  }
-
-  .form-row-content input[type="text"],
-  .form-row-content input[type="date"],
-  .form-row-content select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-
-  .form-row-content input[type="text"]:focus,
-  .form-row-content input[type="date"]:focus,
-  .form-row-content select:focus {
-    border-color: #79aec8;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(121, 174, 200, 0.2);
-  }
-
-  .error-message {
-    color: #ba2121;
-    font-size: 12px;
-    margin-top: 4px;
-  }
-
-  .admin-button {
-    background: #79aec8;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .admin-button:hover {
-    background: #609ab6;
-  }
-
-  .form-row-content-button {
-    display: flex;
-    justify-content: flex-end;
-  }
-</style>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'inquiries/css/inquiry_create.css' %}">
 {% endblock %}
