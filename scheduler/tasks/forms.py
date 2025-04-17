@@ -8,7 +8,6 @@ class TaskForm(forms.ModelForm):
         model = Task
         fields = ["inquiry", "ship_name", "block_name", "description", "manager", "work_date", "work_time"]
         widgets = {
-            "inquiry": forms.Select(choices=Inquiry.objects.all().values_list("id", "ship_name")),
             "work_date": forms.DateInput(attrs={"type": "date"}),
             "work_time": forms.Select(
                 choices=[
@@ -40,16 +39,20 @@ class TaskForm(forms.ModelForm):
                 ]
             ),
             "description": forms.Textarea(attrs={"rows": 4}),
-            "inquiry.status": forms.Select(
-                choices=Inquiry.objects.all().values_list("status", "status"),
-            ),
         }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
+
+        self.fields["inquiry"].widget = forms.Select(
+            choices=Inquiry.objects.all().values_list("id", "ship_name")
+        )
+        # self.fields["inquiry.status"] = forms.Select(
+        #     choices=Inquiry.objects.all().values_list("status", "status")
+        # )
+        # for field in self.fields.values():
+        #     field.widget.attrs["class"] = "form-control"
 
         # 작업 요청 필드의 선택 옵션을 ship_name - block_name 형식으로 표시
         self.fields["inquiry"].label_from_instance = (
@@ -57,7 +60,7 @@ class TaskForm(forms.ModelForm):
         )
 
         # 담당자 필드의 선택 옵션을 username으로 표시
-        self.fields["manager"].label_from_instance = lambda obj: obj.username
+        self.fields["manager"].label_from_instance = lambda obj: obj.name
         
         # 현재 로그인한 사용자를 담당자 필드의 초기값으로 설정
         if self.user and self.user.is_authenticated:
