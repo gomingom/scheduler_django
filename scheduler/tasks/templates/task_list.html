@@ -54,9 +54,9 @@
                          data-manager="{{ task.manager.username }}"
                          data-description="{{ task.description }}">
                         {% if task.inquiry %}
-                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager.name }} - {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
                         {% else %}
-                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.ship_name }} - {{ task.block_name }}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager.name }} - {{ task.ship_name }} - {{ task.block_name }}
                         {% endif %}
                       </a>
                     </small>
@@ -85,9 +85,9 @@
                          data-manager="{{ task.manager.username }}"
                          data-description="{{ task.description }}">
                         {% if task.inquiry %}
-                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager.name }} - {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
                         {% else %}
-                        {{ task.work_time|slice:"3:" }}시: {{ task.manager }} - {{ task.ship_name }} - {{ task.block_name }}
+                        {{ task.work_time|slice:"3:" }}시: {{ task.manager.name }} - {{ task.ship_name }} - {{ task.block_name }}
                         {% endif %}
                       </a>
                     </small>
@@ -175,6 +175,7 @@
         </thead>
         <tbody>
           {% for task in tasks %}
+          {% if not task.inquiry %}
           <tr>
             <td>
               {{ task.ship_name }} - {{ task.block_name }}
@@ -197,6 +198,7 @@
               >
             </td>
           </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>
