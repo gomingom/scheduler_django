@@ -93,16 +93,20 @@
         {% if form.instance.report_file %}
           <div class="report-file-actions">
             <a href="{% url 'download_report' form.instance.pk %}" class="admin-button" download>리포트 다운로드</a>
-            <label for="id_report_file" class="admin-button">리포트 수정</label>
-            {{ form.report_file }}
+            <div class="file-upload-wrapper">
+              <input type="file" name="report_file" class="report-file-input" id="report-file-input-{{ form.instance.pk }}">
+              <label for="report-file-input-{{ form.instance.pk }}" class="admin-button">리포트 변경</label>
+            </div>
           </div>
         {% else %}
           <div class="report-file-actions">
             <form class="report-upload-form" data-task-id="{{ form.instance.pk }}" enctype="multipart/form-data">
               {% csrf_token %}
-              <input type="file" name="report_file" class="report-file-input" style="display: none;">
-                <button type="button" class="btn btn-sm btn-outline-primary upload-report-btn">리포트 업로드</button>
-              </form>
+              <div class="file-upload-wrapper">
+                <input type="file" name="report_file" class="report-file-input" id="report-file-input-{{ form.instance.pk }}">
+                <label for="report-file-input-{{ form.instance.pk }}" class="admin-button">리포트 업로드</label>
+              </div>
+            </form>
           </div>
         {% endif %}
         {% if form.report_file.errors %}
@@ -133,5 +137,4 @@
 
 {% block extra_js %}
 <script src="{% static 'tasks/js/report_upload.js' %}"></script>
-<script src="{% static 'tasks/js/task_form_modal.js' %}"></script>
 {% endblock %}
