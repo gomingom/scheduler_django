@@ -27,8 +27,13 @@
   margin-left: 10px;
   justify-content: flex-end;
 } 
+.latest-notice{
+  margin-left: 1%;
+  margin-right: 2%;
+}
 .notice-header{
+ 
   display: flex;
-  background-color: black;
+  justify-content: space-between;
 }
 

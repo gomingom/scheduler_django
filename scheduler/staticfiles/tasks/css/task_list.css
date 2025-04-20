@@ -53,3 +53,8 @@
   text-decoration: none;
   color: inherit;
 } 
+
+.scrollable-table {
+  max-height: 400px;
+  overflow-y: auto;
+}

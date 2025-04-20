@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from .models import Task
 from .forms import TaskForm
 import calendar
@@ -8,7 +9,10 @@ from django.template import Library
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.views import View
-
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+import json
+from users.models import User
 register = Library()
 
 
@@ -76,7 +80,7 @@ def task_list(request):
 
     # 각 날짜별 작업 가져오기
     tasks = Task.objects.filter(Q(work_date__year=d.year, work_date__month=d.month))
-
+    managers = User.objects.filter(is_staff=True)
     # 달력 데이터 구성
     calendar_data = []
     for week in month_days:
@@ -101,6 +105,7 @@ def task_list(request):
         "prev_month": prev_month(d),
         "next_month": next_month(d),
         "current_month": d.strftime("%Y년 %m월"),
+        "managers": managers,
     }
 
     
@@ -116,3 +121,22 @@ def task_delete(request, pk):
     task = Task.objects.get(pk=pk)
     task.delete()
     return redirect("task_list")
+
+
+@csrf_exempt
+def create_task_inline(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            task = Task.objects.create(
+                ship_name=data.get('ship_name'),
+                block_name=data.get('block_name'),
+                description=data.get('description'),
+                manager_id=data.get('manager'),
+                work_date=data.get('work_date'),
+                work_time=data.get('work_time')
+            )
+            return JsonResponse({'success': True, 'task_id': task.id})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})

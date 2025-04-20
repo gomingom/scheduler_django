@@ -58,8 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     taskLinks.forEach(link => {
         link.addEventListener('mouseenter', function(e) {
-            const shipName = this.dataset.shipName;
-            const blockName = this.dataset.blockName;
+            const hasInquiry = this.dataset.hasInquiry === 'true';
+            const shipName = hasInquiry ? this.dataset.inquiryShipName : this.dataset.shipName;
+            const blockName = hasInquiry ? this.dataset.inquiryBlockName : this.dataset.blockName;
             const workTime = this.dataset.workTime;
             const manager = this.dataset.manager;
             const description = this.dataset.description;
