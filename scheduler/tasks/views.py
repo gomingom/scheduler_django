@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 from users.models import User
+from django.http import FileResponse
 register = Library()
 
 
@@ -168,3 +169,82 @@ def reject_inquiry(request):
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)})
     return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+
+@csrf_exempt
+def update_task_field(request, pk):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            field = data.get('field')
+            value = data.get('value')
+            
+            task = Task.objects.get(pk=pk)
+            
+            # 필드 업데이트
+            if field == 'manager':
+                task.manager_id = value
+            elif field == 'work_date':
+                task.work_date = value
+            elif field == 'work_time':
+                # work_time 형식 검증 (예: "오전 2시", "오후 3시")
+                import re
+                time_pattern = r'^(오전|오후)\s\d{1,2}시$'
+                if re.match(time_pattern, value):
+                    task.work_time = value
+                else:
+                    return JsonResponse({'success': False, 'message': '유효하지 않은 시간 형식입니다. (예: 오전 2시, 오후 3시)'})
+            elif field == 'description':
+                task.description = value
+            elif field == 'ship_name':
+                task.ship_name = value
+            elif field == 'block_name':
+                task.block_name = value
+            elif field == 'inquiry_ship_name':
+                if task.inquiry:
+                    task.inquiry.ship_name = value
+                    task.inquiry.save()
+                else:
+                    return JsonResponse({'success': False, 'message': '요청 작업이 아닙니다.'})
+            elif field == 'inquiry_block_name':
+                if task.inquiry:
+                    task.inquiry.block_name = value
+                    task.inquiry.save()
+                else:
+                    return JsonResponse({'success': False, 'message': '요청 작업이 아닙니다.'})
+                
+            task.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+
+@csrf_exempt
+def upload_report(request, pk):
+    if request.method == 'POST':
+        try:
+            task = Task.objects.get(pk=pk)
+            if 'report_file' in request.FILES:
+                task.report_file = request.FILES['report_file']
+                task.inquiry.status = "완료"
+                task.inquiry.save()
+                task.save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': '파일이 없습니다.'})
+        except Task.DoesNotExist:
+            return JsonResponse({'success': False, 'error': '작업을 찾을 수 없습니다.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': '잘못된 요청입니다.'})
+
+
+def download_report(request, pk):
+    task = Task.objects.get(pk=pk)
+    if task.report_file:
+        response = FileResponse(task.report_file)
+        response['Content-Disposition'] = f'attachment; filename="{task.report_file.name}"'
+        return response
+    else:
+        return JsonResponse({'success': False, 'error': '리포트 파일이 없습니다.'})

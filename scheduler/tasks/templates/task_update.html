@@ -6,7 +6,7 @@
   <h1>작업 수정</h1>
   <form method="post" class="admin-form">
     {% csrf_token %}
-    {% if form.task.inquiry %}
+    {% if form.instance.inquiry %}
     <div class="form-row">
       <div class="form-row-label">
         <label for="{{ form.inquiry.id_for_label }}">작업 요청:</label>
@@ -86,6 +86,32 @@
     </div>
 
     <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.report_file.id_for_label }}">리포트 파일:</label>
+      </div>
+      <div class="form-row-content">
+        {% if form.instance.report_file %}
+          <div class="report-file-actions">
+            <a href="{% url 'download_report' form.instance.pk %}" class="admin-button" download>리포트 다운로드</a>
+            <label for="id_report_file" class="admin-button">리포트 수정</label>
+            {{ form.report_file }}
+          </div>
+        {% else %}
+          <div class="report-file-actions">
+            <form class="report-upload-form" data-task-id="{{ form.instance.pk }}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" name="report_file" class="report-file-input" style="display: none;">
+                <button type="button" class="btn btn-sm btn-outline-primary upload-report-btn">리포트 업로드</button>
+              </form>
+          </div>
+        {% endif %}
+        {% if form.report_file.errors %}
+          <div class="error-message">{{ form.report_file.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
       <div class="form-row-label"></div>
       <div class="form-row-content">
         <div class="button-group">
@@ -102,4 +128,10 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'tasks/css/task_update.css' %}">
+<link rel="stylesheet" href="{% static 'tasks/css/task_form_modal.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'tasks/js/report_upload.js' %}"></script>
+<script src="{% static 'tasks/js/task_form_modal.js' %}"></script>
 {% endblock %}

@@ -5,10 +5,10 @@ from inquiries.models import Inquiry
 
 class TaskForm(forms.ModelForm):
     INQUIRY_STATUS_CHOICES = [
-        ('pending', '대기중'),
-        ('in_progress', '진행중'),
-        ('completed', '완료'),
-        ('cancelled', '취소'),
+        ('대기', '대기'),
+        ('승인', '승인'),
+        ('반려', '반려'),
+        ('취소', '취소'),
     ]
 
     inquiry_status = forms.ChoiceField(
@@ -59,7 +59,7 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["inquiry"].widget = forms.Select(
-            choices=[(obj.id, f"{obj.ship_name} - {obj.block_name}") for obj in Inquiry.objects.all()]
+            choices=[(obj.id, f"{obj.ship_name} - {obj.block_name}") for obj in Inquiry.objects.filter(status='대기')]
         )
         
         # 작업 요청 필드의 선택 옵션을 ship_name - block_name 형식으로 표시

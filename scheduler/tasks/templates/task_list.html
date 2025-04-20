@@ -131,22 +131,50 @@
             <td>
               {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
             </td>
-            <td>{{ task.manager.name }}</td>
-            <td>{{ task.work_date |date:"Y-m-d" }}</td>
-            <td>{{ task.work_time }}</td>
-            <td>{{ task.description }}</td>
-            <td>-</td>
             <td>
-              <a
-                href="{% url 'task_update' task.pk %}"
-                class="btn btn-sm btn-primary"
-                >수정</a
-              >
-              <a
-                href="{% url 'task_delete' task.pk %}"
-                class="btn btn-sm btn-danger"
-                >삭제</a
-              >
+              <div class="editable-cell" data-field="manager" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.manager.name }}</span>
+                <select class="edit-input" style="display: none;">
+                  {% for manager in managers %}
+                  <option value="{{ manager.id }}" {% if manager.id == task.manager.id %}selected{% endif %}>{{ manager.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </td>
+            <td>
+              <div class="editable-cell" data-field="work_date" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.work_date|date:"Y-m-d" }}</span>
+                <input type="date" class="edit-input" value="{{ task.work_date|date:'Y-m-d' }}" style="display: none;">
+              </div>
+            </td>
+            <td>
+              <div class="editable-cell" data-field="work_time" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.work_time }}</span>
+                <select class="edit-input" style="display: none;">
+                  {% include 'tasks/includes/work_time_options.html' %}
+                </select>
+              </div>
+            </td>
+            <td>
+              <div class="editable-cell" data-field="description" data-task-id="{{ task.pk }}">
+                <span class="display-value">{% if task.description %}{{ task.description }}{% else %}-{% endif %}</span>
+                <input type="text" class="edit-input" value="{{ task.description }}" style="display: none;">
+              </div>
+            </td>
+            <td>
+              {% if task.report_file %}
+              <a href="{% url 'download_report' task.pk %}" class="btn btn-sm btn-primary">리포트 다운로드</a>
+              {% else %}
+              <form class="report-upload-form" data-task-id="{{ task.pk }}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="report_file" class="report-file-input" style="display: none;">
+                <button type="button" class="btn btn-sm btn-outline-primary upload-report-btn">리포트 업로드</button>
+              </form>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'task_update' task.pk %}" class="btn btn-sm btn-primary">수정</a>
+              <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-danger">삭제</a>
             </td>
           </tr>
           {% endif %}
@@ -191,7 +219,12 @@
             </td>
             <td><input type="date" class="form-control" id="work-date"></td>
             <td>
-              <input type="time" class="form-control" id="work-time" min="09:00" max="17:00" step="3600" value="09:00">
+              <div class="editable-cell" data-field="work_time" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.work_time }}</span>
+                <select class="edit-input" style="display: none;">
+                  {% include 'tasks/includes/work_time_options.html' %}
+                </select>
+              </div>
             </td>
             <td><input type="text" class="form-control" id="description" placeholder="설명"></td>
             <td>-</td>
@@ -205,24 +238,59 @@
           {% if not task.inquiry %}
           <tr>
             <td>
-              {{ task.ship_name }} - {{ task.block_name }}
+              <div class="editable-cell" data-field="ship_name" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.ship_name }}</span>
+                <input type="text" class="edit-input" value="{{ task.ship_name }}" style="display: none;">
+              </div>
+              <div class="editable-cell" data-field="block_name" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.block_name }}</span>
+                <input type="text" class="edit-input" value="{{ task.block_name }}" style="display: none;">
+              </div>
             </td>
-            <td>{{ task.manager.name }}</td>
-            <td>{{ task.work_date |date:"Y-m-d" }}</td>
-            <td>{{ task.work_time }}</td>
-            <td>{{ task.description }}</td>
-            <td>-</td>
             <td>
-              <a
-                href="{% url 'task_update' task.pk %}"
-                class="btn btn-sm btn-primary"
-                >수정</a
-              >
-              <a
-                href="{% url 'task_delete' task.pk %}"
-                class="btn btn-sm btn-danger"
-                >삭제</a
-              >
+              <div class="editable-cell" data-field="manager" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.manager.name }}</span>
+                <select class="edit-input" style="display: none;">
+                  {% for manager in managers %}
+                  <option value="{{ manager.id }}" {% if manager.id == task.manager.id %}selected{% endif %}>{{ manager.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </td>
+            <td>
+              <div class="editable-cell" data-field="work_date" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.work_date|date:"Y-m-d" }}</span>
+                <input type="date" class="edit-input" value="{{ task.work_date|date:'Y-m-d' }}" style="display: none;">
+              </div>
+            </td>
+            <td>
+              <div class="editable-cell" data-field="work_time" data-task-id="{{ task.pk }}">
+                <span class="display-value">{{ task.work_time }}</span>
+                <select class="edit-input" style="display: none;">
+                  {% include 'tasks/includes/work_time_options.html' %}
+                </select>
+              </div>
+            </td>
+            <td>
+              <div class="editable-cell" data-field="description" data-task-id="{{ task.pk }}">
+                <span class="display-value">{% if task.description %}{{ task.description }}{% else %}-{% endif %}</span>
+                <input type="text" class="edit-input" value="{{ task.description }}" style="display: none;">
+              </div>
+            </td>
+            <td>
+              {% if task.report_file %}
+              <a href="{% url 'download_report' task.pk %}" class="btn btn-sm btn-primary">리포트 다운로드</a>
+              {% else %}
+              <form class="report-upload-form" data-task-id="{{ task.pk }}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="report_file" class="report-file-input" style="display: none;">
+                <button type="button" class="btn btn-sm btn-outline-primary upload-report-btn">리포트 업로드</button>
+              </form>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'task_update' task.pk %}" class="btn btn-sm btn-primary">수정</a>
+              <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-danger">삭제</a>
             </td>
           </tr>
           {% endif %}
@@ -341,126 +409,11 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'tasks/js/task_list.js' %}"></script>
 <script src="{% static 'tasks/js/task_hover.js' %}"></script>
 <script src="{% static 'tasks/js/task_create_new_job.js' %}"></script>
 <script src="{% static 'tasks/js/task_form_modal.js' %}"></script>
-<script>
-function showRejectModal() {
-    const inquiryId = document.querySelector('select[name="inquiry"]').value;
-    if (!inquiryId) {
-        alert('작업 요청을 선택해주세요.');
-        return;
-    }
-    document.getElementById('rejectModal').style.display = 'block';
-}
-
-function closeRejectModal() {
-    document.getElementById('rejectModal').style.display = 'none';
-    document.getElementById('rejectionReason').value = '';
-}
-
-function submitRejection() {
-    const inquiryId = document.querySelector('select[name="inquiry"]').value;
-    const rejectionReason = document.getElementById('rejectionReason').value;
-    
-    if (!rejectionReason) {
-        alert('반려 사유를 입력해주세요.');
-        return;
-    }
-
-    fetch("{% url 'reject_inquiry' %}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: JSON.stringify({
-            inquiry_id: inquiryId,
-            rejection_reason: rejectionReason
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('작업 요청이 반려되었습니다.');
-            closeRejectModal();
-            window.location.reload();
-        } else {
-            alert('작업 요청 반려에 실패했습니다: ' + data.message);
-        }
-    })
-    .catch(error => {
-        alert('작업 요청 반려 중 오류가 발생했습니다: ' + error);
-    });
-}
-</script>
-
-<style>
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%;
-    border-radius: 5px;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.modal-body {
-    margin-bottom: 20px;
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover {
-    color: black;
-}
-
-.form-group {
-    margin-top: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-</style>
+<script src="{% static 'tasks/js/report_upload.js' %}"></script>
 {% endblock %}
 
 {% endblock %}

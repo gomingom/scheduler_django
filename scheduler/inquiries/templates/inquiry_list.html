@@ -94,7 +94,15 @@
               <td>{{ inquiry.request_date|date:"Y-m-d" }}</td>
               <td>{% if inquiry.task_set.first %}{{ inquiry.task_set.first.work_date|date:"Y-m-d" }}{% else %}-{% endif %}</td>
               <td>{% if inquiry.task_set.first %}{{ inquiry.task_set.first.manager.name }}{% else %}-{% endif %}</td>
-              <td>{{ inquiry.status }}</td>
+              <td>
+                {% if inquiry.status == '반려' %}
+                <span class="status-tooltip" data-rejection-reason="{{ inquiry.rejection_reason }}">{{ inquiry.status }}</span>
+                {% elif inquiry.status == '완료' and inquiry.task_set.first and inquiry.task_set.first.report_file %}
+                <a href="{% url 'download_report' inquiry.task_set.first.pk %}" class="btn btn-sm btn-primary">리포트 다운로드</a>
+                {% else %}
+                {{ inquiry.status }}
+                {% endif %}
+              </td>
               <td>
                 {% if inquiry.inquirer == user %}
                 <a href="{% url 'inquiry_update' inquiry.pk %}" class="btn btn-primary">수정</a>

@@ -1,0 +1,6 @@
+{% for hour in "123456789101112"|make_list %}
+<option value="오전 {{ hour }}시" {% if task.work_time == "오전 "|add:hour|add:"시" %}selected{% endif %}>오전 {{ hour }}시</option>
+{% endfor %}
+{% for hour in "123456789101112"|make_list %}
+<option value="오후 {{ hour }}시" {% if task.work_time == "오후 "|add:hour|add:"시" %}selected{% endif %}>오후 {{ hour }}시</option>
+{% endfor %} 

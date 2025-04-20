@@ -102,4 +102,24 @@
 
 .cancel-button:hover {
   background: #666;
+}
+
+.report-file-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.report-file-actions input[type="file"] {
+  display: none;
+}
+
+.report-file-actions .admin-button {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.report-file-actions a.admin-button {
+  text-decoration: none;
+  color: inherit;
 } 
