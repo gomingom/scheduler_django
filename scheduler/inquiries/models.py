@@ -26,6 +26,7 @@ class Inquiry(models.Model):
     )
     device = models.CharField(max_length=150, choices=DeviceChoices.choices)
     inquiry_detail = models.TextField()
+    rejection_reason = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.ship_name} - {self.block_name}"

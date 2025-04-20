@@ -4,9 +4,22 @@ from users.models import User
 from inquiries.models import Inquiry
 
 class TaskForm(forms.ModelForm):
+    INQUIRY_STATUS_CHOICES = [
+        ('pending', '대기중'),
+        ('in_progress', '진행중'),
+        ('completed', '완료'),
+        ('cancelled', '취소'),
+    ]
+
+    inquiry_status = forms.ChoiceField(
+        choices=INQUIRY_STATUS_CHOICES,
+        required=False,
+        label="작업 요청 상태"
+    )
+
     class Meta:
         model = Task
-        fields = ["inquiry", "ship_name", "block_name", "description", "manager", "work_date", "work_time"]
+        fields = ["inquiry", "inquiry_status", "ship_name", "block_name", "description", "manager", "work_date", "work_time",]
         widgets = {
             "work_date": forms.DateInput(attrs={"type": "date"}),
             "work_time": forms.Select(
@@ -46,14 +59,9 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["inquiry"].widget = forms.Select(
-            choices=Inquiry.objects.all().values_list("id", "ship_name")
+            choices=[(obj.id, f"{obj.ship_name} - {obj.block_name}") for obj in Inquiry.objects.all()]
         )
-        # self.fields["inquiry.status"] = forms.Select(
-        #     choices=Inquiry.objects.all().values_list("status", "status")
-        # )
-        # for field in self.fields.values():
-        #     field.widget.attrs["class"] = "form-control"
-
+        
         # 작업 요청 필드의 선택 옵션을 ship_name - block_name 형식으로 표시
         self.fields["inquiry"].label_from_instance = (
             lambda obj: f"{obj.ship_name} - {obj.block_name}"
@@ -65,3 +73,12 @@ class TaskForm(forms.ModelForm):
         # 현재 로그인한 사용자를 담당자 필드의 초기값으로 설정
         if self.user and self.user.is_authenticated:
             self.initial['manager'] = self.user
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.cleaned_data.get('inquiry_status'):
+            instance.inquiry.status = self.cleaned_data['inquiry_status']
+            instance.inquiry.save()
+        if commit:
+            instance.save()
+        return instance

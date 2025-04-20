@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Task
+from .models import Task, Inquiry
 from .forms import TaskForm
 import calendar
 from datetime import datetime, date, timedelta
@@ -26,7 +26,11 @@ def task_create(request):
     if request.method == "POST":
         form = TaskForm(request.POST, user=request.user)
         if form.is_valid():
-            form.save()
+            task = form.save()
+            # 작업이 inquiry와 연결되어 있고, inquiry가 있는 경우 status를 승인으로 변경
+            if task.inquiry:
+                task.inquiry.status = "승인"
+                task.inquiry.save()
             return redirect("task_list")
     return render(request, "task_create.html", {"form": TaskForm(user=request.user)})
 
@@ -98,6 +102,7 @@ def task_list(request):
 
     # 모든 작업 목록
     all_tasks = Task.objects.all()
+    all_inquiry = Inquiry.objects.all()
 
     context = {
         "tasks": all_tasks,
@@ -106,6 +111,8 @@ def task_list(request):
         "next_month": next_month(d),
         "current_month": d.strftime("%Y년 %m월"),
         "managers": managers,
+        "inquiry": all_inquiry,
+        "form": TaskForm(user=request.user),
     }
 
     
@@ -137,6 +144,27 @@ def create_task_inline(request):
                 work_time=data.get('work_time')
             )
             return JsonResponse({'success': True, 'task_id': task.id})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+
+@csrf_exempt
+def reject_inquiry(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            inquiry_id = data.get('inquiry_id')
+            rejection_reason = data.get('rejection_reason')
+            
+            if not rejection_reason:
+                return JsonResponse({'success': False, 'message': '반려 사유를 입력해주세요.'})
+                
+            inquiry = Inquiry.objects.get(id=inquiry_id)
+            inquiry.status = "반려"
+            inquiry.rejection_reason = rejection_reason
+            inquiry.save()
+            return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)})
     return JsonResponse({'success': False, 'message': 'Invalid request method'})

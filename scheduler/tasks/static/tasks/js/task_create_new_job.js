@@ -1,4 +1,5 @@
 function showNewTaskForm() {
+  console.log(document.getElementById('new-task-form'));
   document.getElementById('new-task-form').style.display = 'table-row';
 }
 

@@ -1,0 +1,95 @@
+.fixed-task-form {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: white;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: right 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.fixed-task-form.show {
+  right: 0;
+}
+
+/* 메인 컨테이너가 작업 생성 폼이 표시될 때 왼쪽으로 이동하도록 설정 */
+.container {
+  transition: transform 0.3s ease;
+}
+
+.fixed-task-form.show ~ .container {
+  transform: translateX(-200px);
+}
+
+.task-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-row {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.form-row-label {
+  width: 120px;
+  padding-right: 10px;
+}
+
+.form-row-content {
+  flex: 1;
+}
+
+.form-row-content input,
+.form-row-content select,
+.form-row-content textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+} 
+
+.reject-button {
+  background-color: #dc3545;
+  color: white;
+}

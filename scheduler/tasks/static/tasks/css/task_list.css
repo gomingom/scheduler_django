@@ -55,6 +55,58 @@
 } 
 
 .scrollable-table {
-  max-height: 400px;
+  max-height: 250px;
   overflow-y: auto;
+}
+
+.task-creation-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.task-creation-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-creation-body {
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.task-creation-form .btn-close {
+  margin-left: auto;
+}
+
+.content {
+  transition: all 0.3s ease;
+}
+
+.content.form-shown {
+  margin-right: 520px; /* Form width + some padding */
+  width: calc(100% - 520px);
+}
+
+.fixed-task-form {
+  position: fixed;
+  top: 100%;
+  right: 0;
+
+  width: 500px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  margin-right: 10px;
 }
