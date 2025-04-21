@@ -129,7 +129,8 @@
           {% if task.inquiry %}
           <tr>
             <td>
-              {{ task.inquiry.ship_name }} - {{ task.inquiry.block_name }}
+              <div>{{ task.inquiry.ship_name }}</div>
+              <div>{{ task.inquiry.block_name }}</div>
             </td>
             <td>
               <div class="editable-cell" data-field="manager" data-task-id="{{ task.pk }}">
@@ -219,12 +220,9 @@
             </td>
             <td><input type="date" class="form-control" id="work-date"></td>
             <td>
-              <div class="editable-cell" data-field="work_time" data-task-id="{{ task.pk }}">
-                <span class="display-value">{{ task.work_time }}</span>
-                <select class="edit-input" style="display: none;">
-                  {% include 'tasks/includes/work_time_options.html' %}
-                </select>
-              </div>
+              <select class="form-control" id="work-time">
+                {% include 'tasks/includes/work_time_options.html' %}
+              </select>
             </td>
             <td><input type="text" class="form-control" id="description" placeholder="설명"></td>
             <td>-</td>
@@ -238,14 +236,8 @@
           {% if not task.inquiry %}
           <tr>
             <td>
-              <div class="editable-cell" data-field="ship_name" data-task-id="{{ task.pk }}">
-                <span class="display-value">{{ task.ship_name }}</span>
-                <input type="text" class="edit-input" value="{{ task.ship_name }}" style="display: none;">
-              </div>
-              <div class="editable-cell" data-field="block_name" data-task-id="{{ task.pk }}">
-                <span class="display-value">{{ task.block_name }}</span>
-                <input type="text" class="edit-input" value="{{ task.block_name }}" style="display: none;">
-              </div>
+              <div>{{ task.ship_name }}</div>
+              <div>{{ task.block_name }}</div>
             </td>
             <td>
               <div class="editable-cell" data-field="manager" data-task-id="{{ task.pk }}">

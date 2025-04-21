@@ -25,7 +25,7 @@ function submitNewTask() {
   const blockName = document.getElementById('block-name').value;
   const managerId = document.getElementById('manager').value;
   const workDate = document.getElementById('work-date').value;
-  const workTime = formatTime(document.getElementById('work-time').value);
+  const workTime = document.getElementById('work-time').value;
   const description = document.getElementById('description').value;
 
   // CSRF 토큰 가져오기
