@@ -227,8 +227,9 @@ def upload_report(request, pk):
             task = Task.objects.get(pk=pk)
             if 'report_file' in request.FILES:
                 task.report_file = request.FILES['report_file']
-                task.inquiry.status = "완료"
-                task.inquiry.save()
+                if task.inquiry:  # inquiry가 있는 경우에만 status 업데이트
+                    task.inquiry.status = "완료"
+                    task.inquiry.save()
                 task.save()
                 return JsonResponse({'success': True})
             else:

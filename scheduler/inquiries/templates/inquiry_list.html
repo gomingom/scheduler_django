@@ -98,7 +98,7 @@
                 {% if inquiry.status == '반려' %}
                 <span class="status-tooltip" data-rejection-reason="{{ inquiry.rejection_reason }}">{{ inquiry.status }}</span>
                 {% elif inquiry.status == '완료' and inquiry.task_set.first and inquiry.task_set.first.report_file %}
-                <a href="{% url 'download_report' inquiry.task_set.first.pk %}" class="btn btn-sm btn-primary">리포트 다운로드</a>
+                <a href="{% url 'download_report' inquiry.task_set.first.pk %}" class="btn btn-sm btn-primary">완료</a>
                 {% else %}
                 {{ inquiry.status }}
                 {% endif %}

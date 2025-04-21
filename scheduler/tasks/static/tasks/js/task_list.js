@@ -53,6 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 기존의 다른 필드 처리 로직
                     editInput.focus();
                     
+                    // manager 필드인 경우 선택된 옵션의 텍스트를 즉시 표시
+                    if (this.dataset.field === 'manager') {
+                        editInput.addEventListener('change', function() {
+                            const selectedOption = this.options[this.selectedIndex];
+                            displayValue.textContent = selectedOption.text;
+                        });
+                    }
+                    
                     const saveChanges = () => {
                         const taskId = this.dataset.taskId;
                         const field = this.dataset.field;
@@ -72,7 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                displayValue.textContent = value;
+                                if (field === 'manager') {
+                                    const selectedOption = editInput.options[editInput.selectedIndex];
+                                    displayValue.textContent = selectedOption.text;
+                                } else {
+                                    displayValue.textContent = value;
+                                }
                                 displayValue.style.display = 'block';
                                 editInput.style.display = 'none';
                             } else {
