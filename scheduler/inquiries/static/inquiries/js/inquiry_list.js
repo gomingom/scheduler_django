@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   headers.forEach((header) => {
     header.addEventListener("click", () => {
       const column = header.dataset.sort;
+      if (!column) return; // Skip if no sort attribute
 
       // Remove previous sort classes
       headers.forEach((h) => {
@@ -49,15 +50,19 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function getColumnIndex(column) {
-    switch (column) {
-      case "ship":
-        return 1;
-      case "block":
-        return 2;
-      case "status":
-        return 3;
-      default:
-        return 1;
-    }
+    const columnMap = {
+      'ship_name': 1,
+      'block_name': 2,
+      'inquirer_group': 3,
+      'inquiry_detail': 4,
+      'device': 5,
+      'inquirer': 6,
+      'contact_number': 7,
+      'request_date': 8,
+      'measurement_date': 9,
+      'manager': 10,
+      'status': 11
+    };
+    return columnMap[column] || 1;
   }
 }); 

@@ -70,8 +70,11 @@ class TaskForm(forms.ModelForm):
         # 담당자 필드의 선택 옵션을 username으로 표시
         self.fields["manager"].label_from_instance = lambda obj: obj.name
         
+        # 담당자 필드의 queryset을 staff 사용자로만 제한하고 superuser는 제외
+        self.fields["manager"].queryset = User.objects.filter(is_staff=True, is_superuser=False)
+        
         # 현재 로그인한 사용자를 담당자 필드의 초기값으로 설정
-        if self.user and self.user.is_authenticated:
+        if self.user and self.user.is_authenticated and self.user.is_staff and not self.user.is_superuser:
             self.initial['manager'] = self.user
 
     def save(self, commit=True):

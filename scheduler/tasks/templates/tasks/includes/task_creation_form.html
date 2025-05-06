@@ -1,0 +1,79 @@
+<!-- Fixed Task Creation Form -->
+<div id="taskCreationForm" class="fixed-task-form">
+  <div class="task-form-header">
+    <h4>작업 생성</h4>
+    <button id="closeTaskFormBtn" class="btn btn-sm btn-secondary">×</button>
+  </div>
+  <form method="post" class="admin-form" action="{% url 'task_create' %}">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.inquiry.id_for_label }}">작업 요청:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.inquiry }}
+        {% if form.inquiry.errors %}
+        <div class="error-message">{{ form.inquiry.errors }}</div>
+        {% endif %}
+      </div>
+    </div>   
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.description.id_for_label }}">작업 내용:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.description }}
+        {% if form.description.errors %}
+        <div class="error-message">{{ form.description.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.manager.id_for_label }}">담당자:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.manager }}
+        {% if form.manager.errors %}
+        <div class="error-message">{{ form.manager.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.work_date.id_for_label }}">작업 일자:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.work_date }}
+        {% if form.work_date.errors %}
+        <div class="error-message">{{ form.work_date.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label">
+        <label for="{{ form.work_time.id_for_label }}">작업 시간:</label>
+      </div>
+      <div class="form-row-content">
+        {{ form.work_time }}
+        {% if form.work_time.errors %}
+        <div class="error-message">{{ form.work_time.errors }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-row-label"></div>
+      <div class="form-row-content">
+        <div class="button-group">
+          <input type="submit" value="작업 생성" class="admin-button" />
+          <button type="button" class="admin-button cancel-button reject-button" id="rejectTaskBtn" onclick="showRejectModal()">반려</button>
+          <button type="button" class="admin-button cancel-button" id="cancelTaskFormBtn">취소</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div> 

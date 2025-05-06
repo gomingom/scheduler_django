@@ -45,13 +45,13 @@
         <table class="table table-striped" id="inquiryTable">
           <thead>
             <tr>
-              <th class="sortable" data-sort="ship">
+              <th class="sortable" data-sort="ship_name">
                 호선 <span class="sort-icon">↕</span>
               </th>
-              <th class="sortable" data-sort="block">
+              <th class="sortable" data-sort="block_name">
                 블록 <span class="sort-icon">↕</span>
               </th>
-              <th class="sortable" data-sort="block"></thclass>
+              <th class="sortable" data-sort="inquirer_group">
                 요청부서 <span class="sort-icon">↕</span>
               </th>
               <th class="sortable" data-sort="inquiry_detail">
@@ -72,7 +72,7 @@
               <th class="sortable" data-sort="measurement_date">
                 측정일 <span class="sort-icon">↕</span>
               </th>
-              <th class="sortable" data-sort="">
+              <th class="sortable" data-sort="manager">
                 담당자 <span class="sort-icon">↕</span>
               </th>
               <th class="sortable" data-sort="status">
@@ -117,8 +117,6 @@
     </div>
   </div>
 </div>
-{% endblock %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'inquiries/css/inquiry_list.css' %}">
 {% endblock %}
@@ -126,3 +124,5 @@
 {% block extra_js %}
 <script src="{% static 'inquiries/js/inquiry_list.js' %}"></script>
 {% endblock %}
+{% endblock %}
+
